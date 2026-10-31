@@ -1,4 +1,21 @@
-export function EntityForm() {
+import { useState } from "react"
+import type { } from "../types"
+
+
+// const initialForm: TPlanetInput = {
+//     title: "",
+//     // description: '',
+//     rating: 7,
+//     price: 0,
+//     genre: "rpg",
+//     platforms: ["pc"],
+//     releaseDate: new Date().toISOString().slice(0, 10),
+// }
+
+export function PlanetForm() {
+
+
+    
     return (
         <form className="form">
             <h2>Добавить сущность</h2>

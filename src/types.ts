@@ -17,7 +17,7 @@ export interface IPlanet {
   distanceFromSun?: string
   diameter?: number
   mass?: number
-  type: string
+  type: PlanetType
   discoveredDate: string
   features?: string[]
   createdAt: string
@@ -88,4 +88,22 @@ export interface Pagination {
     pageSize: number
     pageCount: number
     total: number
+}
+
+
+// export type TPlanetInput = Omit<
+//     IPlanet,
+//     "id" | "documentId" | "cover" | "createdAt" | "updatedAt" | "publishedAt"
+// >
+
+
+
+export const TYPES = ["terrestrial", "gasGigant", "iceGigant", "ocean"] as const
+export type PlanetType = (typeof TYPES)[number]
+
+export const TYPES_LABELS: Record<PlanetType, string> = {
+    terrestrial: "Земной тип",
+    gasGigant: "Газовый гигант",
+    iceGigant: "Ледяной гигант",
+    ocean: "Водный тип"
 }

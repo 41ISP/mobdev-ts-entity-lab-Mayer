@@ -14,7 +14,7 @@ export const apiInstance = axios.create({
 const getPlanet = async (): Promise<IStrapiResponse<IPlanet[]>> => {
     const res = await apiInstance.get<IStrapiResponse<IPlanet[]>>("/planets", {
         params: {
-            populate: "cover",
+            populate: "*",
         },
     })
     return res.data
