@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { TYPES, type TPlanetInput } from "../types" // 1. Импортируем тип
+import { TYPES, type TPlanetInput } from "../types" 
 
 const initialForm: TPlanetInput = {
     name: "",
@@ -77,7 +77,6 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                 />
             </label>
 
-            {/* Оставлен только textarea, так как description — длинный текст */}
             <label className="field">
                 Описание
                 <textarea

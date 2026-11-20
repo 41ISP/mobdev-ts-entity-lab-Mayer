@@ -15,17 +15,14 @@ export default function App() {
         <div className="layout">
             <header className="top">
                 <h1>Планетарий</h1>
-                {/* Используем длину массива, так как в сторе лежит чистый массив планет */}
                 <span>{planets.length} в коллекции</span>
             </header>
 
             <aside>
-                {/* Передаем метод добавления из стора в форму */}
                 <PlanetForm onSubmit={addPlanet} />
             </aside>
 
             <main>
-                {/* Ровно одно состояние в каждый момент времени */}
                 {loading && <p className="hint">Загружаем планеты…</p>}
 
                 {error && !loading && (
@@ -36,7 +33,6 @@ export default function App() {
                     <>
                         {planets.length > 0 ? (
                             <div className="grid">
-                                {/* Используем documentId для ключа и передаем onDelete */}
                                 {planets.map((el) => (
                                     <PlanetCard 
                                         key={el.documentId} 
