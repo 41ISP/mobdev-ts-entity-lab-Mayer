@@ -1,21 +1,25 @@
 import { useState } from "react"
-import type { } from "../types"
-
+import { TYPES, type TPlanetInput } from "../types" // 1. Импортируем тип
 
 const initialForm: TPlanetInput = {
     name: "",
-    discoveredDate: new Date().toISOString().slice(0, 10),
-    description: '',
+    description: "",
     distanceFromSun: 0,
     diameter: 0,
     mass: 0,
-    type: "Земной тип",
-    genre: "rpg",
+    type: TYPES[0], 
+    discoveredDate: new Date().toISOString().split("T")[0],
     features: [],
 }
 
-export function PlanetForm() {
+
+interface PlanetFormProps {
+    onSubmit: (data: TPlanetInput) => void
+}
+
+export function PlanetForm({ onSubmit }: PlanetFormProps) {
     const [form, setForm] = useState<TPlanetInput>(initialForm)
+
     const onChange = <K extends keyof TPlanetInput>(
         key: K,
         value: TPlanetInput[K],
@@ -23,9 +27,18 @@ export function PlanetForm() {
         setForm((o) => ({ ...o, [key]: value }))
     }
 
-    
+    const onNumberChange = (key: keyof Pick<TPlanetInput, 'distanceFromSun' | 'diameter' | 'mass'>, e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value === "" ? 0 : Number(e.target.value)
+        onChange(key, val)
+    }
+
+const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    onSubmit(form)
+}
+
     return (
-        <form className="form">
+        <form className="form" onSubmit={handleSubmit}>
             <h2>Добавить планету</h2>
 
             <label className="field">
@@ -37,96 +50,79 @@ export function PlanetForm() {
                     value={form.name}
                     required
                 />
-                
             </label>
 
-   
-
-
-               <label className="field">
+            {/* Управляемый select */}
+            <label className="field">
                 Тип планеты
-                <select>
+                <select
+                    value={form.type}
+                    onChange={(e) => onChange("type", e.target.value as TPlanetInput['type'])}
+                >
                     <option>Земной тип</option>
-                     <option>Газовый гигант</option>
-                     <option>Ледяной гигант</option>
-                     <option>Водный тип</option>
+                    <option>Газовый гигант</option>
+                    <option>Ледяной гигант</option>
+                    <option>Водный тип</option>
                 </select>
             </label>
 
             <label className="field">
                 Дата открытия планеты
-                <input type="date" 
-                 name="discoveredDate"
-                onChange={(e) => onChange("discoveredDate", e.target.value) }
-                value={form.discoveredDate}
-                required />
+                <input 
+                    type="date" 
+                    name="discoveredDate"
+                    onChange={(e) => onChange("discoveredDate", e.target.value)}
+                    value={form.discoveredDate}
+                    required 
+                />
             </label>
 
+            {/* Оставлен только textarea, так как description — длинный текст */}
             <label className="field">
                 Описание
-                <textarea rows={3} />
-                <input
-                    onChange={(e) => onChange("description", e.target.value)}
-                    type="text"
+                <textarea
+                    rows={3}
                     name="description"
                     value={form.description ?? ""}
+                    onChange={(e) => onChange("description", e.target.value)}
                     required
                 />
             </label>
 
-
-
             <label className="field">
-                Расстояние от нас в млн км
+                Расстояние от Солнца (млн км)
                 <input
-                 type="number" 
-                 min={0} 
-                 step={10} 
-                 name="description"
-                 value={form.description ?? ""}
-                 
-
-                 />
+                    type="number" 
+                    min={0} 
+                    step={10} 
+                    value={form.distanceFromSun ?? ""}
+                    onChange={(e) => onNumberChange('distanceFromSun', e)}
+                />
             </label>
-
-
 
             <label className="field">
-                Масса в млн км
-                <input type="number" min={0} step={1} />
+                Масса (млн тонн)
+                <input 
+                    type="number" 
+                    min={0} 
+                    step={1} 
+                    value={form.mass ?? ""}
+                    onChange={(e) => onNumberChange('mass', e)}
+                />
             </label>
 
-            {/* <label className="field">
-                Число с плавающией точкой
-                <input type="number" min={0} step={0.01} />
-            </label> */}
-
-            {/* <label className="field">
-                <span>Диапазон</span>
-                <input type="range" min={0} max={10} step={0.5} />
-            </label>
-         */}
-
-          
-
-            <fieldset>
-                <legend>Группа чекбоксов</legend>
-                <label className="check">
-                    <input type="checkbox" />
-                    Чекбокс 1
-                </label>
-                <label className="check">
-                    <input type="checkbox" />
-                    Чекбокс 2
-                </label>
-            </fieldset>
-
-            <label className="check">
-                <input type="checkbox" />
-                Чекбокс
+            <label className="field">
+                Диаметр (км)
+                <input 
+                    type="number" 
+                    min={0} 
+                    step={1} 
+                    value={form.diameter ?? ""}
+                    onChange={(e) => onNumberChange('diameter', e)}
+                />
             </label>
 
-            <button className="btn">Добавить</button>
+            <button className="btn" type="submit">Добавить</button>
         </form>
     )
 }

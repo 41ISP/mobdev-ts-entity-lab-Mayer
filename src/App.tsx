@@ -1,65 +1,57 @@
-import {PlanetCard } from "./components/PlanetCard"
+import { PlanetCard } from "./components/PlanetCard"
 import { PlanetForm } from "./components/PlanetForm"
 import "./App.css"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { usePlanetStore } from "./store/usePlanetStore"
 
 export default function App() {
-
-    const {planets, getPlanet} = usePlanetStore()
-    const [error, setIsError] = useState<string | null>(null)
-    const [loading, setisLoading] = useState<boolean>(false)
+    const { planets, loading, error, getPlanet, addPlanet } = usePlanetStore()
 
     useEffect(() => {
-        const load = async () => {
-        setisLoading(true)
-        setIsError(null)
-        try{
-            await getPlanet()
-        }catch (error){
-        console.error(error)
-        setIsError('Что то не так')
-        
-        }finally{
-            setisLoading(false)
-        }}
-        load()
-    },[])
-
-
-    useEffect(() => {
-        console.log(planets)
-
-    },[planets])
+        getPlanet()
+    }, [getPlanet])
 
     return (
         <div className="layout">
             <header className="top">
                 <h1>Планетарий</h1>
-                 {planets?.meta && (
-                    <span>{planets?.meta?.pagination.total} в коллекции</span>
-                )}
+                {/* Используем длину массива, так как в сторе лежит чистый массив планет */}
+                <span>{planets.length} в коллекции</span>
             </header>
 
             <aside>
-                <PlanetForm />
+                {/* Передаем метод добавления из стора в форму */}
+                <PlanetForm onSubmit={addPlanet} />
             </aside>
 
             <main>
-                {error && <p className="error">Ошибка: </p>}
+                {/* Ровно одно состояние в каждый момент времени */}
                 {loading && <p className="hint">Загружаем планеты…</p>}
-                {!loading && !error && planets?.data && planets.data.length > 0 ? (
-                    <div className="grid">
-                        {planets.data.map((el) => (
-                            <PlanetCard key={el.id} {...el} />
-                        ))}
-                    </div>
-                ) : (
-                    <p className="hint">
-                        Полка пуста. Добавьте первую планету через форму.
-                    </p>
+
+                {error && !loading && (
+                    <p className="error">Ошибка: {error}</p>
                 )}
 
+                {!loading && !error && (
+                    <>
+                        {planets.length > 0 ? (
+                            <div className="grid">
+                                {/* Используем documentId для ключа и передаем onDelete */}
+                                {planets.map((el) => (
+                                    <PlanetCard 
+                                        key={el.documentId} 
+                                        {...el} 
+                                        onDelete={usePlanetStore.getState().removePlanet} 
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="hint">
+                                Полка пуста. Добавьте первую планету через форму.
+                            </p>
+                        )}
+                    </>
+                )}
             </main>
         </div>
     )

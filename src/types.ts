@@ -1,7 +1,12 @@
+// types.ts
+
+
 export interface IStrapiResponse<T> {
     data: T
     meta?: Meta
 }
+
+
 
 export interface IMedia {
     id: number
@@ -14,7 +19,7 @@ export interface IPlanet {
   documentId: string
   name: string
   description?: string
-  distanceFromSun?: string
+  distanceFromSun?: number
   diameter?: number
   mass?: number
   type: PlanetType
@@ -91,10 +96,11 @@ export interface Pagination {
 }
 
 
-// export type TPlanetInput = Omit<
-//     IPlanet,
-//     "id" | "documentId" | "cover" | "createdAt" | "updatedAt" | "publishedAt"
-// >
+export type TPlanetInput = Omit<
+    IPlanet,
+    "id" | "documentId" | "createdAt" | "updatedAt" | "publishedAt" | "image"
+>
+
 
 
 
